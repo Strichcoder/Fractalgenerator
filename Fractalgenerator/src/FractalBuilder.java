@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -8,25 +9,69 @@ public class FractalBuilder
 	private Point end;
 	private Point input;
 	
-	private Fragment current;
+	private boolean finished;
+	
+	private Fragment current; // the moving one
 	
 	private ArrayList<Fragment> fragments;
+	private Color fragmentColor = Color.red;
+	
+	private Fractal fractal; // demo-fractal with rekMax=3
+	private Color fractalColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+	private int rekPrev = 5; // preview of fractal. default = 3.
+	private int rekMax = 10; // for finished fractals
 	
 	public FractalBuilder(Point start, Point end, Point input)
 	{
+		finished = false;
 		this.start = start;
 		this.end = end;
 		this.input = input;
 		current = new Fragment(start, input);
 		fragments = new ArrayList<Fragment>();
 		fragments.add(current);
+		fractal = this.toFractal(rekPrev);
 	}
 	
-	public void addFragment(Point p)
+	public void update()
+	{
+		if(Input.clicked(1))
+		{
+			addFragment(Input.point.copy());
+		}
+		if(!finished)
+			fractal.setGenerator(toGenerator());
+	}
+	
+	public void draw(Graphics2D g)
+	{
+		if(finished)
+			g.setColor(fragmentColor);
+		else
+			g.setColor(fractalColor);
+		
+		fractal.draw(g,getStart().toPointd(), getEnd().toPointd(),1);
+		
+		if(!finished)
+		{
+			g.setColor(fragmentColor);
+			for(int i=0;i<fragments.size();i++)
+			{
+				fragments.get(i).draw(g);
+			}
+			start.draw(g);
+			end.draw(g);
+			input.draw(g);
+		}
+	}
+	
+	public void addFragment(Point p) // belongs to update()
 	{
 		if(p.abs(end) < Point.getgRadius()) // clicked on the end Point
 		{
 			current.setP2(end);
+			fractal.setRekMax(rekMax);
+			finished = true;
 		}
 		else
 		{
@@ -35,20 +80,9 @@ public class FractalBuilder
 		fragments.add(current);
 		}
 	}
-	
-	public void draw(Graphics2D g)
-	{
-		for(int i=0;i<fragments.size();i++)
-		{
-			fragments.get(i).draw(g);
-		}
-		start.draw(g);
-		end.draw(g);
-		input.draw(g);
-	}
-	
 
-	public Fractal toFractal()
+	// getters and setters and stuff:
+	public ArrayList<Pointd> toGenerator()
 	{
 		ArrayList<Pointd> fractallist = new ArrayList<Pointd>();
 		fractallist.add(fractalize(start));
@@ -56,10 +90,21 @@ public class FractalBuilder
 		{
 			fractallist.add(fractalize(fragments.get(i).getP2()));
 		}
-		return new Fractal(fractallist);
+		return fractallist;
 	}
 	
-	private Pointd fractalize(Point p)
+	public Fractal toFractal(int rek)
+	{
+		ArrayList<Pointd> fractallist = new ArrayList<Pointd>();
+		fractallist.add(fractalize(start));
+		for(int i=0;i<fragments.size();i++)
+		{
+			fractallist.add(fractalize(fragments.get(i).getP2()));
+		}
+		return new Fractal(fractallist, rek);
+	}
+	
+	private Pointd fractalize(Point p) // used for toFractal()
 	{
 		double dy = 	end.getX()*p.getY() - end.getX()*start.getY()
 						- start.getX()*p.getY() - end.getY()*p.getX() 
