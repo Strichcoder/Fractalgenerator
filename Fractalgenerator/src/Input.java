@@ -41,12 +41,10 @@ public class Input implements MouseListener, MouseMotionListener{
 			if(e.getButton()==1)
 			{
 				LEFT = true;
-				leftclicked = true;
 			}
 			if(e.getButton()==3)
 			{
 				RIGHT = true;
-				rightclicked = true;
 			}
 		}
 		
@@ -55,22 +53,30 @@ public class Input implements MouseListener, MouseMotionListener{
 			if(e.getButton()==1)
 			{
 				LEFT = false;
-				leftclicked = false;
+				leftclicked = true;
 			}
 			if(e.getButton()==3)
 			{
 				RIGHT = false;
-				rightclicked = false;
+				rightclicked = true;
 			}
 		}
 		
 		@Override
-		public void mouseMoved(MouseEvent e) {
+		public void mouseMoved(MouseEvent e) 
+		{
 			point.setX(e.getX());
 			point.setY(e.getY());
 		}
 		
-		public int mouseX()
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			point.setX(e.getX());
+			point.setY(e.getY());
+		}
+		
+		// absolute mouse Positions
+		public int mouseX() 
 		{
 		     return (int)MouseInfo.getPointerInfo().getLocation().getX();
 		}
@@ -96,12 +102,6 @@ public class Input implements MouseListener, MouseMotionListener{
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{       
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		public static Point getPoint() {

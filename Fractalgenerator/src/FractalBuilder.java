@@ -18,7 +18,7 @@ public class FractalBuilder
 	
 	private Fractal fractal; // demo-fractal with rekMax=3
 	private Color fractalColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
-	private int rekPrev = 3; // preview of fractal. default = 3.
+	private int rekPrev = 4; // preview of fractal. default = 3.
 	private int rekMax = 7; // for finished fractals
 	
 	public FractalBuilder(Point start, Point end, Point input)
@@ -35,12 +35,19 @@ public class FractalBuilder
 	
 	public void update()
 	{
-		if(Input.clicked(1))
-			addFragment(Input.point.copy());
-		if(Input.clicked(3))
-			addLastFragment(input);
 		if(!finished)
+		{
+			for(int i=0;i<fragments.size();i++)
+			{
+				fragments.get(i).getP1().update();
+			}
+			end.update();
+			if(Input.clicked(1))
+				addFragment(Input.point.copy());
+			if(Input.clicked(3))
+				addLastFragment(input);
 			fractal.setGenerator(toGenerator()); // update preview
+		}
 	}
 	
 	public void draw(Graphics2D g)

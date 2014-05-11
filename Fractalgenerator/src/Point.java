@@ -7,12 +7,28 @@ public class Point
 	private int x;
 	private int y;
 	
+	private boolean dragged;
+	
 	private static int gRadius = 4;
 	
 	public Point(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
+		dragged = false;
+	}
+	
+	public void update()
+	{
+		if((double)abs(Input.point) < gRadius && Input.LEFT)
+			dragged = true;
+		if(!Input.LEFT)
+			dragged = false;
+		if(dragged)
+		{
+			this.x=Input.point.getX();
+			this.y=Input.point.getY();
+		}
 	}
 	
 	public void draw(Graphics2D g)
