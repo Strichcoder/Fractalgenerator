@@ -21,6 +21,10 @@
 ,*
 .#*
 .DS_Store
+.classpath
+.project
+*/.settings/*
+*/.metadata/*
 .del-*
 .make.state
 .nse_depinfo
