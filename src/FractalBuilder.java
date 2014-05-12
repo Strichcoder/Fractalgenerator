@@ -20,6 +20,9 @@ public class FractalBuilder
 	private Color fractalColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
 	private int rekPrev = 4; // preview of fractal. default = 3.
 	private int rekMax = 7; // for finished fractals
+	private long startTime;
+	private int fps=0;
+	private int currentFPS=0;
 	
 	public FractalBuilder(Point start, Point end, Point input)
 	{
@@ -48,15 +51,27 @@ public class FractalBuilder
 				addLastFragment(input);
 			fractal.setGenerator(toGenerator()); // update preview
 		}
+		 if(System.currentTimeMillis() - startTime >= 1000) {
+	            fps = currentFPS;
+	            currentFPS = 0;
+	            startTime = System.currentTimeMillis();
+	        }
 	}
 	
 	public void draw(Graphics2D g)
 	{
 		if(finished)
-			g.setColor(fragmentColor);
+			
+			//TODO: This does nothing for your code, it just slows it like hell
+			
+			//g.setColor(fragmentColor);
+			System.out.println("Placeholder");
 		else
-			g.setColor(fractalColor);
+		g.setColor(fractalColor);
 		
+		
+		//while this makes the whole programm faster! try it out, if you delete the setColor(orange, the program is much slower)
+		g.setColor(Color.orange);
 		fractal.draw(g,getStart().toPointd(), getEnd().toPointd(),1);
 		
 		if(!finished)
@@ -70,6 +85,15 @@ public class FractalBuilder
 			end.draw(g);
 			input.draw(g);
 		}
+		
+		
+		g.setColor(Color.green);
+		
+		currentFPS++;
+		g.drawString("fps: " +Integer.toString(fps), Fractalgenerator.WIDTH-60, 10);
+		
+		g.setColor(fractalColor);
+		
 	}
 	
 	// update helpers:
