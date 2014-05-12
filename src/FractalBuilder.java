@@ -71,7 +71,7 @@ public class FractalBuilder
 		
 		
 		//while this makes the whole programm faster! try it out, if you delete the setColor(orange, the program is much slower)
-		g.setColor(Color.orange);
+		g.setColor(Color.gray);
 		fractal.draw(g,getStart().toPointd(), getEnd().toPointd(),1);
 		
 		if(!finished)
